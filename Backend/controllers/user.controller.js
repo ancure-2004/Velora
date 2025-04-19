@@ -21,8 +21,33 @@ module.exports.registerUser = async (req, res, next) => {
         password: hashedPassword,  // Use the hashed password
     });
 
-    const token = await user.generateAuthToken(user);  // Generate a token for the user
+    const token = await user.generateAuthToken();  // Generate a token for the user
 
     res.status(201).json({ token, user});// Return success response
 
+}
+
+module.exports.loginUser = async (req, res, next) => {
+
+    const errors = validationResult(req);  // Validate request data using express-validator
+    if (!errors.isEmpty()) {  // Check if there are validation errors
+        return res.status(422).json({ errors: errors.array() });  // Return validation errors
+    }
+
+    const { email, password } = req.body;  // Destructure request body
+
+    const user = await userModel.findOne({ email }).select('+password');  // Find user by email
+
+    if(!user) {  // Check if user exists
+        return res.status(401).json({ message: 'Invalid email or password' });  // Return error response
+    }
+
+    const isMatch = await user.comparePassword(password);  // Compare passwords
+
+    if(!isMatch) {  // Check if passwords match
+        return res.status(401).json({ message: 'Invalid email or password' });  // Return error response
+    }
+
+    const token = await user.generateAuthToken();  // Generate a token for the user
+    res.status(200).json({ token, user });  // Return success response
 }

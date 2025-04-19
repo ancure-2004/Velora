@@ -13,8 +13,18 @@ router.post( '/register', [  // Define validation rules for user registration
     body('password')
       .isLength({ min: 6 })
       .withMessage('Password must be at least 6 characters long'),  // Validate password length
-]
-, userController.registerUser);  // Register user route
+  ] , userController.registerUser
+);  // Register user route
+
+
+router.post('/login', [  // Define validation rules for user login
+    body('email').isEmail().withMessage('Invalid email format'),  // Validate email format
+
+    body('password')
+      .isLength({ min: 6 })
+      .withMessage('Password must be at least 6 characters long'),  // Validate password length
+  ], userController.loginUser
+);  // Login user route
 
 
 module.exports = router; // Export the router for use in the main app

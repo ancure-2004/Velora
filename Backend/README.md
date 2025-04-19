@@ -1,41 +1,40 @@
 # API Documentation
 
+## Endpoints
+
+- [POST /users/register](#usersregister)
+- [POST /users/login](#userslogin)
+
+---
+
 ## Endpoint: `/users/register`
 
 ### **Description**
-The `/users/register` endpoint allows a new user to register an account. The endpoint validates the request data, hashes the password, creates a user in the database, and returns a JSON Web Token (JWT) along with the created user’s details.
-
----
+The `/users/register` endpoint allows a new user to register an account. The endpoint validates the request data, hashes the password, creates a user in the database, and returns a JSON Web Token (JWT) along with the created user's details.
 
 ### **HTTP Method**
 `POST`
-
----
 
 ### **Request URL**
 ```
 http://localhost:4000/users/register
 ```
-
-
----
+*Replace with your server’s domain and port if different.*
 
 ### **Headers**
-| Key           | Value                |
-|---------------|----------------------|
-| Content-Type  | application/json     |
-
----
+| Key           | Value              |
+|---------------|--------------------|
+| Content-Type  | application/json   |
 
 ### **Request Body**
 The request body must be a JSON object with the following structure:
 
-| Field                  | Type     | Required | Description                                                       |
-|------------------------|----------|----------|-------------------------------------------------------------------|
-| `fullName.firstName`   | string   | Yes      | The first name of the user. Must be at least 3 characters long.   |
-| `fullName.lastName`    | string   | No       | The last name of the user. If provided, must be at least 3 characters long. |
-| `email`                | string   | Yes      | The user's email address. Must be a valid email format.           |
-| `password`             | string   | Yes      | The password for the account. Must be at least 6 characters long. |
+| Field                  | Type   | Required | Description                                                      |
+|------------------------|--------|----------|------------------------------------------------------------------|
+| `fullName.firstName`   | string | Yes      | The user's first name. Must be at least 3 characters long.       |
+| `fullName.lastName`    | string | No       | The user's last name. If provided, must be at least 3 characters long. |
+| `email`                | string | Yes      | A valid email address.                                           |
+| `password`             | string | Yes      | The account password. Must be at least 6 characters long.        |
 
 #### **Example Request Body**
 ```json
@@ -49,13 +48,10 @@ The request body must be a JSON object with the following structure:
 }
 ```
 
----
-
 ### **Response**
 
 #### **Success Response**
 - **Status Code**: `201 Created`
-- **Description**: User registration was successful.
 - **Response Body**:
 ```json
 {
@@ -71,12 +67,107 @@ The request body must be a JSON object with the following structure:
 }
 ```
 
+#### **Error Responses**
+- **422 Unprocessable Entity**: Input data did not meet validation requirements.
+- **409 Conflict**: The provided email address already exists.
+- **500 Internal Server Error**: An unexpected error occurred on the server.
+
+---
+
+## Endpoint: `/users/login`
+
+### **Description**
+The `/users/login` endpoint allows an existing user to authenticate. It verifies the provided email and password, and, if valid, returns a JSON Web Token (JWT) along with the user's details.
+
+### **HTTP Method**
+`POST`
+
+### **Request URL**
+```
+http://localhost:4000/users/login
+```
+*Replace with your server’s domain and port if different.*
+
+### **Headers**
+| Key           | Value              |
+|---------------|--------------------|
+| Content-Type  | application/json   |
+
+### **Request Body**
+The request body must be a JSON object with the following structure:
+
+| Field      | Type   | Required | Description                 |
+|------------|--------|----------|-----------------------------|
+| `email`    | string | Yes      | A valid email address.      |
+| `password` | string | Yes      | The user's password.        |
+
+#### **Example Request Body**
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+### **Response**
+
+#### **Success Response**
+- **Status Code**: `200 OK`
+- **Response Body**:
+```json
+{
+  "token": "<JWT_TOKEN>",
+  "user": {
+    "_id": "60c72b2f9b1e8e3a50c8b456",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+#### **Error Responses**
+- **422 Unprocessable Entity**: Input data did not meet validation requirements.
+- **401 Unauthorized**: Invalid email or password.
+- **500 Internal Server Error**: An unexpected error occurred on the server.
+
+---
+
+### **Testing the Endpoints**
+
+#### **Example cURL for `/users/register`**
+```bash
+curl -X POST http://localhost:4000/users/register \
+-H "Content-Type: application/json" \
+-d '{
+  "fullName": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "password123"
+}'
+```
+
+#### **Example cURL for `/users/login`**
+```bash
+curl -X POST http://localhost:4000/users/login \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}'
+```
+
 ---
 
 ### **Notes**
-- **Data Security**: Passwords are hashed using bcrypt before being stored.
-- **Token Generation**: A JWT is generated for the user using a secret defined in the environment variables.
-- **Error Handling**: Ensure proper handling of validation, duplicate entries, and unexpected errors as defined in the responses above.
+- **Data Security**: Passwords are hashed using bcrypt before storage.
+- **Token Generation**: JWT tokens are generated using a secret defined in the environment variables.
+- **Validation**: Both endpoints validate the request data using express-validator.
+- **Error Handling**: The API returns appropriate status codes and error messages for validation errors, authentication failures, and server errors.
 
 ---
 
