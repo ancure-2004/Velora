@@ -256,6 +256,7 @@ curl -X GET http://localhost:4000/users/profile \
 ```bash
 curl -X GET http://localhost:4000/users/logout \
 -H "Authorization: Bearer <JWT_TOKEN>"
+```
 
 ---
 
