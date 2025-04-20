@@ -7,6 +7,9 @@
 - [POST /users/profile](#usersprofile)
 - [POST /users/logout](#userslogout)
 - [POST /captains/register](#captainsregister)
+- [POST /captains/login](#captainslogin)
+- [GET /captains/profile](#captainsprofile)
+- [GET /captains/logout](#captainslogout)
 
 ---
 
@@ -224,7 +227,7 @@ http://localhost:4000/users/logout
 ### Endpoint: `/captains/register`
 
 #### Description
-The `/captains/register` endpoint allows a new captain to create an account. The endpoint validates the request data, hashes the password, creates a captain in the database, and returns a JSON Web Token (JWT) along with the created captain's details.
+The `/captains/register` endpoint allows a new captain to create an account. It validates the request data, hashes the password, stores the captain in the database, and returns a JSON Web Token (JWT) along with the created captain's details.
 
 #### HTTP Method
 `POST`
@@ -236,9 +239,9 @@ http://localhost:4000/captains/register
 *Replace with your server’s domain and port if different.*
 
 #### Headers
-| Key           | Value              |
-|---------------|--------------------|
-| Content-Type  | application/json   |
+| Key           | Value            |
+|---------------|------------------|
+| Content-Type  | application/json |
 
 #### Request Body
 The request body must be a JSON object with the following structure:
@@ -248,7 +251,7 @@ The request body must be a JSON object with the following structure:
 | `fullName.firstName`            | string | Yes      | Captain’s first name. Must be at least 3 characters long.                |
 | `fullName.lastName`             | string | No       | Captain’s last name. If provided, must be at least 3 characters long.      |
 | `email`                         | string | Yes      | A valid email address.                                                   |
-| `password`                      | string | Yes      | The password for the account. Must be at least 6 characters long.         |
+| `password`                      | string | Yes      | The account password. Must be at least 6 characters long.                |
 | `vehicle.color`                 | string | Yes      | Color of the vehicle. Must be at least 3 characters long.                |
 | `vehicle.plate`                 | string | Yes      | Vehicle plate number. Must be at least 3 characters long.                |
 | `vehicle.capacity`              | number | Yes      | The seating capacity of the vehicle. Must be at least 1.                 |
@@ -299,29 +302,166 @@ The request body must be a JSON object with the following structure:
 ```
 
 ##### Error Responses
-- **422 Unprocessable Entity:** Input data did not meet the validation requirements.
+- **422 Unprocessable Entity:** Input data did not meet validation requirements.
 - **409 Conflict:** The provided email address is already registered.
 - **500 Internal Server Error:** An unexpected error occurred on the server.
 
-#### Example cURL Command
-```bash
-curl -X POST http://localhost:4000/captains/register \
--H "Content-Type: application/json" \
--d '{
-  "fullName": {
-    "firstName": "Alice",
-    "lastName": "Smith"
-  },
-  "email": "alice.smith@example.com",
-  "password": "securePassword123",
-  "vehicle": {
-    "color": "Red",
-    "plate": "XYZ1234",
-    "capacity": 4,
-    "vehicleType": "car"
-  }
-}'
+---
+
+### Endpoint: `/captains/login`
+
+#### Description
+The `/captains/login` endpoint allows an existing captain to authenticate. It verifies the provided email and password, and if valid, returns a JSON Web Token (JWT) along with the captain’s details. The endpoint also sets a cookie with the token.
+
+#### HTTP Method
+`POST`
+
+#### Request URL
 ```
+http://localhost:4000/captains/login
+```
+*Replace with your server’s domain and port if different.*
+
+#### Headers
+| Key           | Value            |
+|---------------|------------------|
+| Content-Type  | application/json |
+
+#### Request Body
+The request body must be a JSON object with the following structure:
+
+| Field      | Type   | Required | Description              |
+|------------|--------|----------|--------------------------|
+| `email`    | string | Yes      | A valid email address.   |
+| `password` | string | Yes      | The captain's password.  |
+
+##### Example Request Body
+```json
+{
+  "email": "alice.smith@example.com",
+  "password": "securePassword123"
+}
+```
+
+#### Response
+
+##### Success Response
+- **Status Code:** `200 OK`
+- **Response Body:**
+```json
+{
+  "token": "<JWT_TOKEN>",
+  "captain": {
+    "_id": "60d21b4667d0d8992e610c85",
+    "fullName": {
+      "firstName": "Alice",
+      "lastName": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+*Note: The token is also set as a cookie (`token`).*
+
+##### Error Responses
+- **422 Unprocessable Entity:** Input data did not meet validation requirements.
+- **401 Unauthorized:** Invalid email or password.
+- **500 Internal Server Error:** An unexpected error occurred on the server.
+
+---
+
+### Endpoint: `/captains/profile`
+
+#### Description
+The `/captains/profile` endpoint retrieves the authenticated captain’s profile information. This endpoint requires a valid JWT token provided in the Authorization header or cookie.
+
+#### HTTP Method
+`GET`
+
+#### Request URL
+```
+http://localhost:4000/captains/profile
+```
+*Replace with your server’s domain and port if different.*
+
+#### Headers
+| Key           | Value                          |
+|---------------|--------------------------------|
+| Content-Type  | application/json               |
+| Authorization | Bearer <JWT_TOKEN>             |
+
+#### Response
+
+##### Success Response
+- **Status Code:** `200 OK`
+- **Response Body:**
+```json
+{
+  "captain": {
+    "_id": "60d21b4667d0d8992e610c85",
+    "fullName": {
+      "firstName": "Alice",
+      "lastName": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+
+##### Error Responses
+- **401 Unauthorized:** Invalid or missing authentication token.
+- **500 Internal Server Error:** An unexpected error occurred on the server.
+
+---
+
+### Endpoint: `/captains/logout`
+
+#### Description
+The `/captains/logout` endpoint logs out the currently authenticated captain by adding the JWT token to a blacklist and clearing the token cookie. This prevents the token from being used again.
+
+#### HTTP Method
+`GET`
+
+#### Request URL
+```
+http://localhost:4000/captains/logout
+```
+*Replace with your server’s domain and port if different.*
+
+#### Headers
+| Key           | Value                          |
+|---------------|--------------------------------|
+| Content-Type  | application/json               |
+| Authorization | Bearer <JWT_TOKEN>             |
+
+#### Response
+
+##### Success Response
+- **Status Code:** `200 OK`
+- **Response Body:**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+##### Error Responses
+- **401 Unauthorized:** Invalid or missing authentication token.
+- **500 Internal Server Error:** An unexpected error occurred on the server.
 
 ---
 
@@ -360,6 +500,48 @@ curl -X GET http://localhost:4000/users/profile \
 #### **Example cURL for `/users/logout`**
 ```bash
 curl -X GET http://localhost:4000/users/logout \
+-H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+#### Example cURL for `/captains/register`
+```bash
+curl -X POST http://localhost:4000/captains/register \
+-H "Content-Type: application/json" \
+-d '{
+  "fullName": {
+    "firstName": "Alice",
+    "lastName": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "securePassword123",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}'
+```
+
+#### Example cURL for `/captains/login`
+```bash
+curl -X POST http://localhost:4000/captains/login \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "alice.smith@example.com",
+  "password": "securePassword123"
+}'
+```
+
+#### Example cURL for `/captains/profile`
+```bash
+curl -X GET http://localhost:4000/captains/profile \
+-H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+#### Example cURL for `/captains/logout`
+```bash
+curl -X GET http://localhost:4000/captains/logout \
 -H "Authorization: Bearer <JWT_TOKEN>"
 ```
 
