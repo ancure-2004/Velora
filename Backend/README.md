@@ -4,6 +4,8 @@
 
 - [POST /users/register](#usersregister)
 - [POST /users/login](#userslogin)
+- [POST /users/profile](#usersprofile)
+- [POST /users/logout](#userslogout)
 
 ---
 
@@ -135,6 +137,89 @@ The request body must be a JSON object with the following structure:
 
 ---
 
+## Endpoint: `/users/profile`
+
+### **Description**
+The `/users/profile` endpoint retrieves the authenticated user's profile information. This endpoint requires authentication via a JWT token.
+
+### **HTTP Method**
+`GET`
+
+### **Request URL**
+```
+http://localhost:4000/users/profile
+```
+*Replace with your server's domain and port if different.*
+
+### **Headers**
+| Key           | Value                          |
+|---------------|--------------------------------|
+| Content-Type  | application/json               |
+| Authorization | Bearer <JWT_TOKEN>             |
+
+### **Response**
+
+#### **Success Response**
+- **Status Code**: `200 OK`
+- **Response Body**:
+```json
+{
+  "user": {
+    "_id": "60c72b2f9b1e8e3a50c8b456",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+#### **Error Responses**
+- **401 Unauthorized**: Invalid or missing authentication token.
+- **500 Internal Server Error**: An unexpected error occurred on the server.
+
+---
+
+## Endpoint: `/users/logout`
+
+### **Description**
+The `/users/logout` endpoint logs out the currently authenticated user by invalidating their JWT token. The token is added to a blacklist to prevent its further use. This endpoint requires authentication.
+
+### **HTTP Method**
+`GET`
+
+### **Request URL**
+```
+http://localhost:4000/users/logout
+```
+*Replace with your server's domain and port if different.*
+
+### **Headers**
+| Key           | Value                          |
+|---------------|--------------------------------|
+| Content-Type  | application/json               |
+| Authorization | Bearer <JWT_TOKEN>             |
+
+### **Response**
+
+#### **Success Response**
+- **Status Code**: `200 OK`
+- **Response Body**:
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+---
+
+
+#### **Error Responses**
+- **401 Unauthorized**: Invalid or missing authentication token.
+- **500 Internal Server Error**: An unexpected error occurred on the server.
+
+
 ### **Testing the Endpoints**
 
 #### **Example cURL for `/users/register`**
@@ -161,6 +246,17 @@ curl -X POST http://localhost:4000/users/login \
 }'
 ```
 
+#### **Example cURL for `/users/profile`**
+```bash
+curl -X GET http://localhost:4000/users/profile \
+-H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+#### **Example cURL for `/users/logout`**
+```bash
+curl -X GET http://localhost:4000/users/logout \
+-H "Authorization: Bearer <JWT_TOKEN>"
+
 ---
 
 ### **Notes**
@@ -175,6 +271,7 @@ curl -X POST http://localhost:4000/users/login \
 - **express-validator:** Used for validating the incoming request data.
 - **bcrypt:** Used for hashing passwords.
 - **jsonwebtoken:** Used for generating and verifying JWT tokens.
+- **cookie-parser:** is used to read and parse cookies from incoming HTTP requests.
 
 ---
 
