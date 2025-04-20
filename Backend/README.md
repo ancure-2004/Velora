@@ -6,6 +6,7 @@
 - [POST /users/login](#userslogin)
 - [POST /users/profile](#usersprofile)
 - [POST /users/logout](#userslogout)
+- [POST /captains/register](#captainsregister)
 
 ---
 
@@ -212,13 +213,117 @@ http://localhost:4000/users/logout
 }
 ```
 
----
-
-
 #### **Error Responses**
 - **401 Unauthorized**: Invalid or missing authentication token.
 - **500 Internal Server Error**: An unexpected error occurred on the server.
 
+---
+
+## Captain Endpoints
+
+### Endpoint: `/captains/register`
+
+#### Description
+The `/captains/register` endpoint allows a new captain to create an account. The endpoint validates the request data, hashes the password, creates a captain in the database, and returns a JSON Web Token (JWT) along with the created captain's details.
+
+#### HTTP Method
+`POST`
+
+#### Request URL
+```
+http://localhost:4000/captains/register
+```
+*Replace with your server’s domain and port if different.*
+
+#### Headers
+| Key           | Value              |
+|---------------|--------------------|
+| Content-Type  | application/json   |
+
+#### Request Body
+The request body must be a JSON object with the following structure:
+
+| Field                           | Type   | Required | Description                                                              |
+|---------------------------------|--------|----------|--------------------------------------------------------------------------|
+| `fullName.firstName`            | string | Yes      | Captain’s first name. Must be at least 3 characters long.                |
+| `fullName.lastName`             | string | No       | Captain’s last name. If provided, must be at least 3 characters long.      |
+| `email`                         | string | Yes      | A valid email address.                                                   |
+| `password`                      | string | Yes      | The password for the account. Must be at least 6 characters long.         |
+| `vehicle.color`                 | string | Yes      | Color of the vehicle. Must be at least 3 characters long.                |
+| `vehicle.plate`                 | string | Yes      | Vehicle plate number. Must be at least 3 characters long.                |
+| `vehicle.capacity`              | number | Yes      | The seating capacity of the vehicle. Must be at least 1.                 |
+| `vehicle.vehicleType`           | string | Yes      | The type of vehicle. Should be one of: `car`, `bike`, or `auto`.           |
+
+##### Example Request Body
+```json
+{
+  "fullName": {
+    "firstName": "Alice",
+    "lastName": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "securePassword123",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### Response
+
+##### Success Response
+- **Status Code:** `201 Created`
+- **Response Body:**
+```json
+{
+  "token": "<JWT_TOKEN>",
+  "captain": {
+    "_id": "60d21b4667d0d8992e610c85",
+    "fullName": {
+      "firstName": "Alice",
+      "lastName": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+
+##### Error Responses
+- **422 Unprocessable Entity:** Input data did not meet the validation requirements.
+- **409 Conflict:** The provided email address is already registered.
+- **500 Internal Server Error:** An unexpected error occurred on the server.
+
+#### Example cURL Command
+```bash
+curl -X POST http://localhost:4000/captains/register \
+-H "Content-Type: application/json" \
+-d '{
+  "fullName": {
+    "firstName": "Alice",
+    "lastName": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "securePassword123",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}'
+```
+
+---
 
 ### **Testing the Endpoints**
 

@@ -2,10 +2,11 @@ const dotenv = require('dotenv'); // Import dotenv to load environment variables
 dotenv.config(); // Load environment variables from .env file
 const express = require('express');
 const cors = require('cors'); // Import CORS middleware for handling cross-origin requests
+const cookieParser = require('cookie-parser'); // Import cookie-parser middleware
 const app = express();
 const connectDB = require('./db/db'); // Import the connectDB function from db.js
 const userRoutes = require('./routes/user.routes'); // Import user routes
-const cookieParser = require('cookie-parser'); // Import cookie-parser middleware
+const captainRoutes = require('./routes/captain.routes'); // Import captain routes
 
 connectDB(); // Call the connectDB function to establish a connection to the database
 
@@ -20,5 +21,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRoutes); // Use user routes for handling user-related requests
+app.use('/captains', captainRoutes); // Use captain routes for handling captain-related requests
 
 module.exports = app;
