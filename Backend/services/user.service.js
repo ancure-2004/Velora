@@ -1,6 +1,6 @@
 const userModel = require('../models/user.model');
 
-module.exports.createUser = async ({  
+module.exports.createUser = async ({   // Function to create a new user
     firstName,
     lastName,
     email,

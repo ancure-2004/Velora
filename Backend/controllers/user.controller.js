@@ -1,6 +1,7 @@
 const userModel = require('../models/user.model');
 const userService = require('../services/user.service');
 const { validationResult } = require('express-validator');  // Import express-validator for validation
+const blackListTokeModel = require('../models/blacklistToken.model');  // Import blacklist token model
 
 module.exports.registerUser = async (req, res, next) => {
 
@@ -12,11 +13,11 @@ module.exports.registerUser = async (req, res, next) => {
 
     const { fullName, email, password } = req.body;  // Destructure request body
 
-    const hashedPassword = await userModel.hashPassword(password);  // Hash the password using userService
+    const hashedPassword = await userModel.hashPassword(password);  // Hash the password using userModel
 
     const user = await userService.createUser({  // Create a new user using userService
         firstName : fullName.firstName,  // Use the first name from the request body
-        lastName : fullName.lastName,  // Use the last name from the request body
+        lastName : fullName.lastName,  // Use the last name from the request body 
         email,
         password: hashedPassword,  // Use the hashed password
     });
@@ -49,5 +50,22 @@ module.exports.loginUser = async (req, res, next) => {
     }
 
     const token = await user.generateAuthToken();  // Generate a token for the user
+    res.cookie('token', token);
     res.status(200).json({ token, user });  // Return success response
+}
+
+module.exports.getUserProfile = async (req, res, next) => {
+    res.status(200).json({ user: req.user });  // Return user profile
+}
+
+module.exports.logoutUser = async (req, res, next) => {
+    res.clearCookie('token');  // Clear the token cookie
+
+    const token = req.cookies.token || req.headers.authorization.split(' ') [ 1 ];  // Get the token from cookies
+
+    await blackListTokeModel.create({  // Add the token to the blacklist
+        token,
+    });
+
+    res.status(200).json({ message: 'Logged out successfully' });  // Return success response
 }

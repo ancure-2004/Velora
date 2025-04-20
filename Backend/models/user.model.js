@@ -41,7 +41,7 @@ userSchema.methods.comparePassword = async function (password) {
 }
 
 userSchema.statics.hashPassword = async function (password) {
-    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password using the generated salt
+    const hashedPassword = await bcrypt.hash(password, 10);  // Hash the password using bcrypt with a salt rounds of 10
     return hashedPassword; // Return the hashed password
 } // Define a static method to hash passwords
 
