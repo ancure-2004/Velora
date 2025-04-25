@@ -2,7 +2,7 @@
 
 ## Endpoints
 
-- [POST /users/register](#usersregister)
+- [POST /users/register](#/users/register)
 - [POST /users/login](#userslogin)
 - [POST /users/profile](#usersprofile)
 - [POST /users/logout](#userslogout)
