@@ -2,17 +2,18 @@
 
 ## Endpoints
 
-- [POST /users/register](#/users/register)
-- [POST /users/login](#userslogin)
-- [POST /users/profile](#usersprofile)
-- [POST /users/logout](#userslogout)
-- [POST /captains/register](#captainsregister)
-- [POST /captains/login](#captainslogin)
-- [GET /captains/profile](#captainsprofile)
-- [GET /captains/logout](#captainslogout)
+- [POST /users/register](#usersRegister)
+- [POST /users/login](#usersLogin)
+- [POST /users/profile](#usersProfile)
+- [POST /users/logout](#usersLogout)
+- [POST /captains/register](#captainsRegister)
+- [POST /captains/login](#captainsLogin)
+- [GET /captains/profile](#captainsProfile)
+- [GET /captains/logout](#captainsLogout)
 
 ---
 
+# usersRegister
 ## Endpoint: `/users/register`
 
 ### **Description**
@@ -80,6 +81,7 @@ The request body must be a JSON object with the following structure:
 
 ---
 
+# usersLogin
 ## Endpoint: `/users/login`
 
 ### **Description**
@@ -141,6 +143,7 @@ The request body must be a JSON object with the following structure:
 
 ---
 
+# usersProfile
 ## Endpoint: `/users/profile`
 
 ### **Description**
@@ -185,6 +188,7 @@ http://localhost:4000/users/profile
 
 ---
 
+# usersLogout
 ## Endpoint: `/users/logout`
 
 ### **Description**
@@ -224,6 +228,7 @@ http://localhost:4000/users/logout
 
 ## Captain Endpoints
 
+# captainsRegister
 ### Endpoint: `/captains/register`
 
 #### Description
@@ -308,6 +313,7 @@ The request body must be a JSON object with the following structure:
 
 ---
 
+# captainsLogin
 ### Endpoint: `/captains/login`
 
 #### Description
@@ -377,6 +383,7 @@ The request body must be a JSON object with the following structure:
 
 ---
 
+# captainsProfile
 ### Endpoint: `/captains/profile`
 
 #### Description
@@ -428,6 +435,7 @@ http://localhost:4000/captains/profile
 
 ---
 
+# captainsLogout
 ### Endpoint: `/captains/logout`
 
 #### Description
