@@ -21,7 +21,7 @@ const UserSignup = () => {
         const newUser = {
 			fullName: {
 				firstName: firstName,
-				lastName: lastName,		
+				lastName: lastName,	
 			},
 			email: email,
 			password: password,
