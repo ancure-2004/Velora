@@ -1,20 +1,19 @@
-import React from "react";
+import React from 'react'
 
-const ConfirmedRide = (props) => {
-	return (
+const WaitingForDriver = (props) => {
+  return (
 		<div>
-			<h5
-				onClick={() => {
-					props.setConfirmedRidePanel(false);
-				}}
-				className="p-1 text-center w-[93%] absolute top-0"
-			>
-				<i className="text-3xl ri-arrow-down-wide-fill text-violet-200"></i>
-			</h5>
 
-			<h3 className="text-2xl font-semibold mt-5">Confirm Your Ride</h3>
+            <div className='flex items-center justify-between pr-2'>
+                <img className='h-24' src='./CarImage1.png'/>
+                <div className='text-right'>
+                    <h2 className='text-lg font-medium'>Aman Singhal</h2>
+                    <h4 className='text-xl font-semibold -mt-1 -mb-1'>MP04 AB 1234</h4>
+                    <p className='text-sm text-gray-600'>Maruti Suzuki Alto</p>
+                </div>
+            </div>
+
 			<div className="flex gap-2 justify-between flex-col items-center">
-				<img className="w-[70%] " src="CarImage1.png" />
 				<div className="w-full mt-5">
 					<div className="flex items-center gap-5 p-3 border-b-2 ">
 						<i className="text-lg ri-map-pin-3-fill"></i>
@@ -45,16 +44,16 @@ const ConfirmedRide = (props) => {
 					</div>
 				</div>
 				<button
-          onClick={() => {
-            props.setConfirmedRidePanel(false);
-            props.setVehicleFound(true);
-          }}
-          className="bg-green-600 hover:bg-green-800 transition-colors duration-300 text-white text-lg font-bold w-full p-3 rounded-2xl">
-					Confirm
+					onClick={() => {
+                        props.setWaitingForDriver(false);
+					}}
+					className="text-red-600 hover:text-red-800 transition-colors duration-300 text-base w-full"
+				>
+					Cancel
 				</button>
 			</div>
 		</div>
-	);
-};
+  )
+}
 
-export default ConfirmedRide;
+export default WaitingForDriver
