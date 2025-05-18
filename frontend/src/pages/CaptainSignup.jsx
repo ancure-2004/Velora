@@ -171,7 +171,7 @@ const CaptainSignup = () => {
 					</button>
 				</form>
 
-				<div className="text-center mt-5 space-y-6">
+				<div className="text-center mt-2 space-y-6">
 					<p className="text-sm">
 						Already register as Captain?{" "}
 						<Link
@@ -184,7 +184,7 @@ const CaptainSignup = () => {
 				</div>
 			</div>
 			<div>
-				<p className="text-[10px]">
+				<p className="text-[10px] mt-8">
 					This site is protected by reCAPTCHA and the Google{" "}
 					<a
 						href="https://policies.google.com/privacy"
