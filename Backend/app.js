@@ -7,6 +7,8 @@ const app = express();
 const connectDB = require('./db/db'); // Import the connectDB function from db.js
 const userRoutes = require('./routes/user.routes'); // Import user routes
 const captainRoutes = require('./routes/captain.routes'); // Import captain routes
+const mapsRoutes = require('./routes/map.routes'); // Import map routes
+const rideRoutes = require('./routes/ride.routes'); // Import ride routes
 
 connectDB(); // Call the connectDB function to establish a connection to the database
 
@@ -22,5 +24,8 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRoutes); // Use user routes for handling user-related requests
 app.use('/captains', captainRoutes); // Use captain routes for handling captain-related requests
+
+app.use('/maps', mapsRoutes); // Use map routes for handling map-related requests
+app.use('/rides', rideRoutes); // Use ride routes for handling ride-related requests
 
 module.exports = app;

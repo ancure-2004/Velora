@@ -2,14 +2,25 @@
 
 ## Endpoints
 
+### User Endpoints
 - [POST /users/register](#usersRegister)
-- [POST /users/login](#usersLogin)
-- [POST /users/profile](#usersProfile)
-- [POST /users/logout](#usersLogout)
+- [POST /users/login](#usersLogin) 
+- [GET /users/profile](#usersProfile)
+- [GET /users/logout](#usersLogout)
+
+### Captain Endpoints
 - [POST /captains/register](#captainsRegister)
 - [POST /captains/login](#captainsLogin)
-- [GET /captains/profile](#captainsProfile)
+- [GET /captains/profile](#captainsProfile) 
 - [GET /captains/logout](#captainsLogout)
+
+### Ride Endpoints
+- [POST /rides/create](#ridesCreate)
+
+### Maps Endpoints
+- [GET /maps/get-coordinates](#mapsGetCoordinates)
+- [GET /maps/get-distance-time](#mapsGetDistanceTime)
+- [GET /maps/get-suggestions](#mapsGetSuggestions)
 
 ---
 
@@ -473,6 +484,133 @@ http://localhost:4000/captains/logout
 
 ---
 
+# ridesCreate
+## Endpoint: `/rides/create`
+
+### **Description**
+The `/rides/create` endpoint allows authenticated users to create a new ride request. The endpoint validates the locations, calculates fare based on distance and vehicle type, and creates a ride record in the database.
+
+### **HTTP Method**
+`POST`
+
+### **Request URL**
+```
+http://localhost:4000/rides/create
+```
+*Replace with your server's domain and port if different.*
+
+### **Headers**
+| Key           | Value                          |
+|---------------|--------------------------------|
+| Content-Type  | application/json               |
+| Authorization | Bearer <JWT_TOKEN>             |
+
+### **Request Body**
+The request body must be a JSON object with the following structure:
+
+| Field         | Type   | Required | Description                                                |
+|--------------|---------|----------|------------------------------------------------------------|
+| `pickup`     | string  | Yes      | Pickup location. Must be at least 3 characters long.      |
+| `dropoff`    | string  | Yes      | Dropoff location. Must be at least 3 characters long.     |
+| `vehicleType`| string  | Yes      | Type of vehicle. Must be one of: 'car', 'bike', 'auto'.  |
+
+#### **Example Request Body**
+```json
+{
+  "pickup": "123 Main St, City",
+  "dropoff": "456 Oak Ave, City",
+  "vehicleType": "car"
+}
+```
+
+### **Response**
+
+#### **Success Response**
+- **Status Code**: `201 Created`
+- **Response Body**:
+```json
+{
+  "ride": {
+    "_id": "60c72b2f9b1e8e3a50c8b456",
+    "user": "60c72b2f9b1e8e3a50c8b123",
+    "pickup": "123 Main St, City",
+    "dropoff": "456 Oak Ave, City",
+    "vehicleType": "car",
+    "fare": 150,
+    "status": "pending",
+    "distance": 5000,
+    "duration": 900,
+    "orderId": "RIDE-X1Y2Z3",
+    "otp": "123456"
+  }
+}
+```
+
+#### **Error Responses**
+- **400 Bad Request**: Input data did not meet validation requirements.
+- **401 Unauthorized**: Missing or invalid authentication token.
+- **500 Internal Server Error**: An unexpected error occurred on the server.
+
+#### **Example cURL**
+```bash
+curl -X POST http://localhost:4000/rides/create \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <JWT_TOKEN>" \
+-d '{
+  "pickup": "123 Main St, City",
+  "dropoff": "456 Oak Ave, City",
+  "vehicleType": "car"
+}'
+```
+
+---
+
+# mapsGetCoordinates
+## Endpoint: `/maps/get-coordinates`
+
+#### Description
+Gets the latitude and longitude coordinates for a given address using the Google Maps Geocoding API.
+
+#### HTTP Method
+`GET`
+
+#### Request URL
+```
+http://localhost:4000/maps/get-coordinates
+```
+*Replace with your server's domain and port if different.*
+
+#### Headers
+| Key           | Value                          |
+|---------------|--------------------------------|
+| Content-Type  | application/json               |
+| Authorization | Bearer <JWT_TOKEN>             |
+
+#### Query Parameters
+| Parameter | Type   | Required | Description                          |
+|-----------|--------|----------|--------------------------------------|
+| `address` | string | Yes      | The address to get coordinates for   |
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Response Body:**
+```json
+{
+  "success": true,
+  "coordinates": {
+    "latitude": 37.4224764,
+    "longitude": -122.0842499
+  }
+}
+```
+
+#### Error Responses
+- **400 Bad Request:** Invalid or missing `address` parameter.
+- **401 Unauthorized:** Invalid or missing authentication token.
+- **500 Internal Server Error:** An unexpected error occurred on the server.
+
+---
+
 ### **Testing the Endpoints**
 
 #### **Example cURL for `/users/register`**
@@ -550,6 +688,24 @@ curl -X GET http://localhost:4000/captains/profile \
 #### Example cURL for `/captains/logout`
 ```bash
 curl -X GET http://localhost:4000/captains/logout \
+-H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+#### Example cURL for `/rides/create`
+```bash
+curl -X POST http://localhost:4000/rides/create \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <JWT_TOKEN>" \
+-d '{
+  "pickup": "123 Main St, City",
+  "dropoff": "456 Oak Ave, City",
+  "vehicleType": "car"
+}'
+```
+
+#### Example cURL for `/maps/get-coordinates`
+```bash
+curl -X GET "http://localhost:4000/maps/get-coordinates?address=1600 Amphitheatre Parkway, Mountain View, CA" \
 -H "Authorization: Bearer <JWT_TOKEN>"
 ```
 

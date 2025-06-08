@@ -1,0 +1,37 @@
+const express = require('express');
+const router = express.Router();
+const { body, query } = require('express-validator');  // Import express-validator for validation
+const rideController = require('../controllers/ride.controller');
+const authMiddleware = require('../middlewares/auth.middleware');  // Import authentication middleware
+
+router.post('/create', [
+    authMiddleware.authUser,  // Apply authentication middleware to protect the route
+    body('pickup')
+      .isLength({ min: 3 })
+      .withMessage('Pickup location must be at least 3 characters long'),  // Validate pickup location length
+
+    body('dropoff')
+      .isLength({ min: 3 })
+      .withMessage('Dropoff location must be at least 3 characters long'),  // Validate dropoff location length
+
+    body('vehicleType')
+      .isIn(['car', 'bike', 'auto'])
+      .withMessage('Invalid ride type'),  // Validate ride type
+
+  ], rideController.createRide
+);  // Create ride route
+
+router.get('/fare', [
+    authMiddleware.authUser,  // Apply authentication middleware to protect the route
+    query('pickup')
+      .isLength({ min: 3 })
+      .withMessage('Pickup location must be at least 3 characters long'),  // Validate pickup location length
+
+    query('dropoff')
+      .isLength({ min: 3 })
+      .withMessage('Dropoff location must be at least 3 characters long'),  // Validate dropoff location length
+
+  ], rideController.ridefare
+);  // Get ride fare route
+
+module.exports = router; // Export the router for use in the main app
