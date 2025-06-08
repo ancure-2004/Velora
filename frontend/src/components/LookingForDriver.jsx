@@ -10,9 +10,9 @@ const LookingForDriver = (props) => {
 					<div className="flex items-center gap-5 p-3 border-b-2 ">
 						<i className="text-lg ri-map-pin-3-fill"></i>
 						<div>
-							<h3 className="text-lg font-medium">204-GF/ sector - 7</h3>
+							{/* <h3 className="text-lg font-medium">204-GF/ sector - 7</h3> */}
 							<p className="text-sm -mt-1 color=grey-600">
-								Wave City, Ghaziabad NH-24
+								{props.pickup}
 							</p>
 						</div>
 					</div>
@@ -20,9 +20,9 @@ const LookingForDriver = (props) => {
 					<div className="flex items-center gap-5 p-3 border-b-2 ">
 						<i className="text-lg ri-map-pin-4-fill"></i>{" "}
 						<div>
-							<h3 className="text-lg font-medium">204-GF/ sector - 7</h3>
+							{/* <h3 className="text-lg font-medium">204-GF/ sector - 7</h3> */}
 							<p className="text-sm -mt-1 color=grey-600">
-								Wave City, Ghaziabad NH-24
+								{props.destination}
 							</p>
 						</div>
 					</div>
@@ -30,7 +30,7 @@ const LookingForDriver = (props) => {
 					<div className="flex items-center gap-5 p-3">
 						<i className="text-lg ri-currency-line"></i>{" "}
 						<div>
-							<h3 className="text-lg font-medium">200.00</h3>
+							<h3 className="text-lg font-medium">₹{props.fare[props.vehicleType]}</h3>
 							<p className="text-sm -mt-1 color=grey-600">Cash Cash</p>
 						</div>
 					</div>
