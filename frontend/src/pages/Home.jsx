@@ -238,32 +238,36 @@ const Home = () => {
 				</div>
 			</div>
 
-			<div
-				ref={vehiclePanelRef}
-				className="fixed translate-y-full w-full z-10 bottom-0 py-10 px-3 bg-white"
-			>
-				<VehiclePanel
-					setVehicleType={setVehicleType}
-					fare={fare}
-					setConfirmedRidePanel={setConfirmedRidePanel}
-					setVehiclePanelOpen={setVehiclePanelOpen}
-				/>
-			</div>
+			{vehiclePanelOpen && (
+				<div
+					ref={vehiclePanelRef}
+					className="fixed translate-y-full w-full z-10 bottom-0 py-10 px-3 bg-white"
+				>
+					<VehiclePanel
+						setVehicleType={setVehicleType}
+						fare={fare}
+						setConfirmedRidePanel={setConfirmedRidePanel}
+						setVehiclePanelOpen={setVehiclePanelOpen}
+					/>
+				</div>
+			)}
 
-			<div
-				ref={ConfirmRidePanelRef}
-				className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
-			>
-				<ConfirmedRide
-					createRide ={createRide}
-					fare={fare}
-					vehicleType={vehicleType}
-					pickup={pickup}
-					destination={destination}
-					setConfirmedRidePanel={setConfirmedRidePanel}
-					setVehicleFound={setVehicleFound}
-				/>
-			</div>
+			{confirmedRidePanel && (
+				<div
+					ref={ConfirmRidePanelRef}
+					className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
+				>
+					<ConfirmedRide
+						createRide={createRide}
+						fare={fare}
+						vehicleType={vehicleType}
+						pickup={pickup}
+						destination={destination}
+						setConfirmedRidePanel={setConfirmedRidePanel}
+						setVehicleFound={setVehicleFound}
+					/>
+				</div>
+			)}
 			{vehicleFound && (
 				<div
 					ref={VehicleFoundRef}
@@ -279,16 +283,19 @@ const Home = () => {
 					/>
 				</div>
 			)}
-			<div
-				ref={WaitingForDriverRef}
-				className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
-			>
-				<WaitingForDriver
-					ride = {ride}
-					setVehicleFound = {setVehicleFound}
-					waitingForDriver={waitingForDriver}
-					setWaitingForDriver={setWaitingForDriver} />
-			</div>
+			{waitingForDriver && (
+				<div
+					ref={WaitingForDriverRef}
+					className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
+				>
+					<WaitingForDriver
+						ride={ride}
+						setVehicleFound={setVehicleFound}
+						waitingForDriver={waitingForDriver}
+						setWaitingForDriver={setWaitingForDriver}
+					/>
+				</div>
+			)}
 		</div>
 	);
 };
