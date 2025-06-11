@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import axios from "axios";
-import {useGSAP} from "@gsap/React";
+import {useGSAP} from "@gsap/react";
 import gsap from "gsap";
 import {Link} from "react-router-dom";
 import CaptainDetails from "../components/CaptainDetails";
