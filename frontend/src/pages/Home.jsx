@@ -1,4 +1,4 @@
-import React, {use, useEffect, useRef, useState} from "react";
+import React, {use, useContext, useEffect, useRef, useState} from "react";
 import {useGSAP} from "@gsap/React";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -7,7 +7,11 @@ import VehiclePanel from "../components/VehiclePanel";
 import ConfirmedRide from "../components/ConfirmedRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
+import { SocketContext } from "../context/SocketContext";
+import { UserDataContext } from "../context/UserContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 const Home = () => {
 	const [pickup, setPickup] = useState("");
@@ -20,6 +24,35 @@ const Home = () => {
 	const [activeInput, setActiveInput] = useState(null);
 	const [fare, setFare] = useState({});
 	const [vehicleType, setVehicleType] = useState(null);
+	const [ride, setRide] = useState(null);
+
+    const { socket } = useContext(SocketContext)
+    const { user } = useContext(UserDataContext)
+
+	const navigate = useNavigate(); 
+
+    useEffect(() => {
+        socket.emit("join", { userType: "user", userId: user.user._id })
+    }, [ user ])
+
+	useEffect(() => {
+        // Add event listener
+        socket.on('ride-confirmed', (ride) => {
+            console.log('Ride confirmed event received:', ride);
+            setWaitingForDriver(true);
+            setVehicleFound(false);
+			setRide(ride);
+        });
+    }, [socket]);
+
+	useEffect(() => {
+		socket.on('ride-started', (ride) => {
+			console.log("ride")
+			setWaitingForDriver(false)
+			navigate('/riding', { state: { ride } }) // Updated navigate to include ride data
+		})
+	}, [socket]);
+	
 
 	useEffect(() => {
 		const getFares = async () => {
@@ -73,7 +106,7 @@ const Home = () => {
 	const WaitingForDriverRef = useRef(null);
 
 	function submitHandler(e) {
-		e.preventDefualt();
+		e.preventDefault();
 	}
 
 	useGSAP(() => {
@@ -147,9 +180,7 @@ const Home = () => {
 	return (
 		<div className="h-screen w-screen relative overflow-hidden">
 			<img className="w-40 absolute left-3 top-3" src="./velora_icon2.png" />
-			<div className="h-screen w-screen">
-				<img className="h-full w-full object-cover" src="temporary_map.png" />
-			</div>
+				<LiveTracking />
 
 			<div className="flex flex-col justify-end h-screen absolute top-0 w-full">
 				<div className="h-[30%] bg-white p-6 relative">
@@ -250,7 +281,11 @@ const Home = () => {
 				ref={WaitingForDriverRef}
 				className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
 			>
-				<WaitingForDriver waitingForDriver={waitingForDriver} />
+				<WaitingForDriver
+					ride = {ride}
+					setVehicleFound = {setVehicleFound}
+					waitingForDriver={waitingForDriver}
+					setWaitingForDriver={setWaitingForDriver} />
 			</div>
 		</div>
 	);

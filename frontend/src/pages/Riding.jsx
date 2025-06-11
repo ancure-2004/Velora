@@ -1,24 +1,39 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Home from "./Home";
+import {useEffect, useContext} from "react";
+import {SocketContext} from "../context/SocketContext";
+import { useNavigate } from 'react-router-dom'
+import LiveTracking from "../components/LiveTracking";
+
 
 const Riding = () => {
+
+	const location = useLocation();
+	const { ride } = location.state || {} 
+	const { socket } = useContext(SocketContext)
+    const navigate = useNavigate()
+
+    socket.on("ride-ended", () => {
+        navigate('/home')
+    })
+
 	return (
 		<div className="h-screen">
             <Link to='/home' className="fixed h-10 w-10 bg-white rounded-full flex items-center justify-center top-3 right-3 z-10">
                 <i className="text-violet-700 font-bold ri-home-5-line"></i>
             </Link>
 			<div className="h-1/2">
-				<img className="h-full w-full object-cover" src="temporary_map.png" />
+				<LiveTracking />
 			</div>
 
 			<div className="h-1/2 p-4">
 					<div className="flex items-center justify-between">
 						<img className="h-20" src="./CarImage1.png" />
 						<div className="text-right">
-							<h2 className="text-lg font-medium">Aman Singhal</h2>
+							<h2 className="text-lg font-medium capitalize">{ride?.captain.fullName.firstName + " " + ride?.captain.fullName.lastName}</h2>
 							<h4 className="text-xl font-semibold -mt-1 -mb-1">
-								MP04 AB 1234
+								{ride?.captain.vehicle.plate}
 							</h4>
 							<p className="text-sm text-gray-600">Maruti Suzuki Alto</p>
 						</div>
@@ -29,9 +44,8 @@ const Riding = () => {
 							<div className="flex items-center gap-5 p-3 border-b-2 ">
 								<i className="text-lg ri-map-pin-4-fill"></i>{" "}
 								<div>
-									<h3 className="text-lg font-medium">204-GF/ sector - 7</h3>
 									<p className="text-sm -mt-1 color=grey-600">
-										Wave City, Ghaziabad NH-24
+										{ride?.dropoff}
 									</p>
 								</div>
 							</div>
@@ -39,7 +53,7 @@ const Riding = () => {
 							<div className="flex items-center gap-5 p-3">
 								<i className="text-lg ri-currency-line"></i>{" "}
 								<div>
-									<h3 className="text-lg font-medium">200.00</h3>
+									<h3 className="text-lg font-medium">₹{ride?.fare}</h3>
 									<p className="text-sm -mt-1 color=grey-600">Cash Cash</p>
 								</div>
 							</div>

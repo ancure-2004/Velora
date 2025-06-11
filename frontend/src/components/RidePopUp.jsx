@@ -8,7 +8,7 @@ const RidePopUp = (props) => {
             <div className="flex justify-between items-center mt-4 p-3 bg-gray-200 rounded-xl">
                 <div className="flex items-center gap-3">
                     <img className="h-12 w-12 rounded-full" src="driverImg.png"/>
-                    <h2 className="text-lg font-medium">Aman Singhal</h2>
+                    <h2 className="text-lg font-medium">{props.ride?.user.fullName.firstName + " " + props.ride?.user.fullName.lastName}</h2>
                 </div>
                 <h2 className="text-xl font-semibold">2.2 KM</h2>
             </div>
@@ -18,9 +18,16 @@ const RidePopUp = (props) => {
 					<div className="flex items-center gap-5 p-3 border-b-2 ">
 						<i className="text-lg ri-map-pin-4-fill"></i>{" "}
 						<div>
-							<h3 className="text-lg font-medium">204-GF/ sector - 7</h3>
 							<p className="text-sm -mt-1 color=grey-600">
-								Wave City, Ghaziabad NH-24
+								{props.ride?.pickup}
+							</p>
+						</div>
+					</div>
+					<div className="flex items-center gap-5 p-3 border-b-2 ">
+						<i className="text-lg ri-map-pin-4-fill"></i>{" "}
+						<div>
+							<p className="text-sm -mt-1 color=grey-600">
+								{props.ride?.dropoff}
 							</p>
 						</div>
 					</div>
@@ -28,7 +35,7 @@ const RidePopUp = (props) => {
 					<div className="flex items-center gap-5 p-3">
 						<i className="text-lg ri-currency-line"></i>{" "}
 						<div>
-							<h3 className="text-lg font-medium">200.00</h3>
+							<h3 className="text-lg font-medium">₹{props.ride?.fare}</h3>
 							<p className="text-sm -mt-1 color=grey-600">Cash Cash</p>
 						</div>
 					</div>
@@ -36,7 +43,8 @@ const RidePopUp = (props) => {
 				<div className="w-full flex gap-2 justify-between items-center">
 					<button
 						onClick={() => {
-                            props.setConfirmRidePanel(true);
+                            props.setConfirmRidePopupPanel(true);
+							props.confirmRide();
 						}}
 						className="bg-green-600 hover:bg-green-800 transition-colors duration-300 text-white text-lg font-bold w-full p-3 rounded-2xl"
 					>

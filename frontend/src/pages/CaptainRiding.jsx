@@ -1,14 +1,16 @@
 import { useGSAP } from "@gsap/React";
 import gsap from "gsap";
 import React, { useRef, useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import FinishRide from "../components/FinishRide";
+import LiveTracking from "../components/LiveTracking";
 
 const CaptainRiding = () => {
 
     const [finishRidePanel, setFinishRidePanel] = useState(false);
-
     const finishRidePanelRef = useRef(null);
+	const location = useLocation();
+	const rideData = location.state?.ride
 
     useGSAP(() => {
 		if (finishRidePanel) {
@@ -32,7 +34,7 @@ const CaptainRiding = () => {
 				<i className="text-violet-700 font-bold ri-logout-box-r-line"></i>
 			</Link>
 			<div className="h-4/5">
-				<img className="h-full w-full object-cover" src="temporary_map.png" />
+				<LiveTracking />
 			</div>
 
 			<div
@@ -58,7 +60,7 @@ const CaptainRiding = () => {
                 </button>
 			</div>
             <div ref={finishRidePanelRef} className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white">
-				<FinishRide setFinishRidePanel={setFinishRidePanel} />
+				<FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel} />
 			</div>
 		</div>
 	);

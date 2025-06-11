@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {UserDataContext} from "../context/UserContext";
 import {useNavigate} from "react-router-dom";
@@ -11,6 +11,10 @@ const Userlogin = () => {
 
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		console.log("Updated user state:", user);
+	}, [user]);
+
 	async function submitHandler(e) {
 		e.preventDefault();
 
@@ -22,9 +26,8 @@ const Userlogin = () => {
 		const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData);
 
 		if (response.status === 200) {
-			const data = response.data;
-			setUser(data.user);
-			localStorage.setItem("token", data.token);
+			setUser(response.data);
+			localStorage.setItem("token", response.data.token);
 			navigate("/home");
 		}
 
