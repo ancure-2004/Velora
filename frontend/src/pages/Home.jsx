@@ -264,19 +264,21 @@ const Home = () => {
 					setVehicleFound={setVehicleFound}
 				/>
 			</div>
-			<div
-				ref={VehicleFoundRef}
-				className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
-			>
-				<LookingForDriver
-					fare={fare}
-					vehicleType={vehicleType}
-					pickup={pickup}
-					destination={destination}
-					setConfirmedRidePanel={setConfirmedRidePanel}
-					setVehicleFound={setVehicleFound}
-				/>
-			</div>
+			{vehicleFound && (
+				<div
+					ref={VehicleFoundRef}
+					className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
+				>
+					<LookingForDriver
+						fare={fare}
+						vehicleType={vehicleType}
+						pickup={pickup}
+						destination={destination}
+						setConfirmedRidePanel={setConfirmedRidePanel}
+						setVehicleFound={setVehicleFound}
+					/>
+				</div>
+			)}
 			<div
 				ref={WaitingForDriverRef}
 				className="fixed translate-y-full w-full z-10 bottom-0 py-6 px-3 bg-white"
