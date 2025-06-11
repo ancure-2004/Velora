@@ -34,4 +34,25 @@ router.get('/fare', [
   ], rideController.ridefare
 );  // Get ride fare route
 
+router.post('/confirm', [
+    authMiddleware.authCaptain,  // Apply authentication middleware to protect the route
+    body('rideId')
+      .isMongoId()
+      .withMessage('Invalid ride ID'),  // Validate ride ID format
+  ], rideController.confirmRide
+);  // Confirm ride route
+
+router.get('/start-ride',
+    authMiddleware.authCaptain,
+    query('rideId').isMongoId().withMessage('Invalid ride id'),
+    query('otp').isString().isLength({ min: 6, max: 6 }).withMessage('Invalid OTP'),
+    rideController.startRide
+)
+
+router.post('/end-ride',
+    authMiddleware.authCaptain,
+    body('rideId').isMongoId().withMessage('Invalid ride id'),
+    rideController.endRide
+)
+
 module.exports = router; // Export the router for use in the main app

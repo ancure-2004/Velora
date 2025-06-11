@@ -1,5 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv'); // Import dotenv to load environment variables from .env file
+const captainModel = require('../models/captain.model'); // Adjust the path as necessary
 
 module.exports.getAddress = async (address) => {
     try {
@@ -9,10 +10,10 @@ module.exports.getAddress = async (address) => {
         const response = await axios.get(url);
 
         if (response.data.status === 'OK') {
-            const { lat, lng } = response.data.results[0].geometry.location;
+            const location = response.data.results[0].geometry.location;
             return {
-                success: true,
-                coordinates: { latitude: lat, longitude: lng }
+                ltd: location.lat, 
+                lng: location.lng 
             };
         } else {
             return {
@@ -98,4 +99,16 @@ module.exports.getSuggestions = async (input) => {
             error: error.message
         };
     }
+}
+
+module.exports.getCaptainsInRadius = async (ltd, lng, radius) => {
+    const captain = await captainModel.find({
+        location: {
+            $geoWithin: {
+                $centerSphere: [[ltd, lng], radius/6371]
+            }
+        },
+    });
+
+    return captain;
 }

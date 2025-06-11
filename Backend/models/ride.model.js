@@ -8,7 +8,7 @@ const rideSchema = new mongoose.Schema({
     },
     captain: {
         type: mongoose.Schema.Types.ObjectId,  // Reference to the captain assigned to the ride
-        ref: 'user',  // Reference to the user model
+        ref: 'captain',  // Reference to the user model
         default: null,  // Captain can be null if not assigned yet
     },
     pickup: {
