@@ -1,5 +1,5 @@
 import React, {use, useContext, useEffect, useRef, useState} from "react";
-import {useGSAP} from "@gsap/React";
+import {useGSAP} from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
 import LocationSearchPanel from "../components/LocationSearchPanel";
