@@ -16,7 +16,10 @@ app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded request bodies
 app.use(cookieParser()); // Middleware to parse cookies from request headers
 
-app.use(cors()); // Use CORS middleware to allow cross-origin requests
+app.use(cors({
+  origin: process.env.SOCKET_ORIGIN,   // will read from .env or Render
+  credentials: true
+}));
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
