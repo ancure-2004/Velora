@@ -109,10 +109,9 @@ velora/
 
 ```bash
 # Clone the repository
-git clone https://github.com/ancure-2004/velora.git
+git clone https://github.com/ancure-2004/Velora.git
 
-# Install dependencies
-cd velora
+cd Velora
 
 #Frontend dependencies
 cd frontend
