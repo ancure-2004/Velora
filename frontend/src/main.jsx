@@ -20,3 +20,12 @@ createRoot(document.getElementById('root')).render(
   </CaptainContext>
 
 )
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/velora-sw.js")
+      .then((reg) => console.log("Service Worker registered", reg))
+      .catch((err) => console.error("Service Worker failed", err));
+  });
+}
